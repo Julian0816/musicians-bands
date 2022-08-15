@@ -29,4 +29,24 @@ describe('Band and Musician Models', () => {
         })
         expect(testMusician.name).toEqual('Andres Cepeda');
     })
+
+    test('Band can have many Mucisians', async () => {
+        await db.sync({force: true})
+
+        let newBand = await Band.create({
+            name: 'The Beatles',
+            genre: 'English rock'
+        })
+
+        let newMusician = await Musician.create({
+            name: 'Pepito Perez',
+            instrument: 'flut'
+        })
+
+        await newBand.addMusician(newMusician)
+
+        const musicians = await newBand.getMusicians()
+
+        expect(musicians.length).toBe(1)
+    })
 })
